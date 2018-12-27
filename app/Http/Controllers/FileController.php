@@ -28,7 +28,7 @@ class FileController extends Controller
     public function addFile()
     {
         if (Auth::user()->role_id == 4) {
-            return redirect(locale()->current() . '/home');
+            return redirect('/home');
             die();
         }
         $levelsAll = Level::all();
@@ -46,15 +46,7 @@ class FileController extends Controller
             "categories" => Category::all()
         ];
 
-        if (App::isLocale('ar')) {
-            /*
-                ARABIC        
-             */
-            return view('ar.welcome');/* TODO */
-        } else {
-            /* FRENCH */
-            return view('fr.add-file', $data);
-        }
+        return view('add-file', $data);
     }
     public function handleAddFile(Request $request)
     {
@@ -92,8 +84,7 @@ class FileController extends Controller
             'branch' => 'required',
             'hash' => 'required',
         ];
-        $validator = Validator::make($request->all(), $rules);
-
+        $validator = Validator::make($request->all(), $rules);  
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
@@ -109,7 +100,7 @@ class FileController extends Controller
 
         return redirect(locale()->current() . '/upload')->with('success', "Fichier Ajouté !");
     }
-    public function download($lang, $uuid)
+    public function download($uuid)
     {
         $id = Crypt::decryptString($uuid);
         $file = File::where('id', $id)->firstOrFail();
@@ -118,7 +109,7 @@ class FileController extends Controller
         $pathToFile = public_path('/storage/files/' . $file->filename);
         return response()->download($pathToFile, str_slug($file->title) . '.pdf');
     }
-    public function view($lang, $uuid)
+    public function view($uuid)
     {
         $id = Crypt::decryptString($uuid);
         $file = File::where('id', $id)->firstOrFail();

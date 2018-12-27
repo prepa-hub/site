@@ -1,4 +1,4 @@
-@extends('fr.layouts.layout')
+@extends('layouts.layout')
 @section('title','Ajouter un fichier')
 @section('add2header')
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
@@ -16,7 +16,7 @@
             @include('auth.messages')
             <label>Sélectionner un fichier:</label>
             <div id="dropzone" class="dropzone"></div>
-            <form method="POST" action="/{{ locale()->current() }}/store">
+            <form method="POST" action="/store">
                 <br>
                 <div class="form-group">
                     <label for="">Titre</label>
@@ -104,7 +104,7 @@ function showBranch(that) {
 jQuery(document).ready(function() {
    
   $("#dropzone").dropzone({
-    url: "/{{ locale()->current() }}/upload",
+    url: "/upload",
     dictDefaultMessage: "Déposer des fichiers ici ou <br> cliquez pour téléverser ...",
     uploadMultiple: false,
     maxFiles:1,

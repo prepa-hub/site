@@ -48,7 +48,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($lang, $sort = null)
+    public function index($sort = null)
     {
 
         $levelsAll = Level::all();
@@ -73,7 +73,7 @@ class HomeController extends Controller
         }
 
         $files = $this->paginate($files, setting('site.files_per_page'));
-        $prefix = $sort ? '/' . $lang . '/home/' . $sort : '/' . $lang . '/home';
+        $prefix = $sort ? '/home/' . $sort : '/home';
         $files->withPath($prefix);
 
         $data = [
@@ -82,17 +82,9 @@ class HomeController extends Controller
             "branches" => $branches,
             "files" => $files,
         ];
-        if (App::isLocale('ar')) {
-            /*
-                ARABIC        
-             */
-            return view('fr.welcome', $data);
-        } else {
-            /* FRENCH */
-            return view('fr.welcome', $data);
-        }
+        return view('welcome', $data);
     }
-    public function search($lang, Request $request)
+    public function search(Request $request)
     {
         $sort = null;
         $levelsAll = Level::all();
@@ -128,7 +120,7 @@ class HomeController extends Controller
         if (count($files) > 0) {
 
             $files = $this->paginate($files, setting('site.files_per_page'));
-            $prefix = $sort ? '/' . $lang . '/home/' . $sort : '/' . $lang . '/home';
+            $prefix = $sort ? '/home/' . $sort : '/home';
             $files->withPath($prefix);
             $data = [
                 "subjects" => Subject::all(),
@@ -137,15 +129,15 @@ class HomeController extends Controller
                 "files" => $files,
                 "searchTerm" => $term
             ];
-            return view('fr.welcome', $data);
+            return view('welcome', $data);
         } else {
-            return redirect('/fr/home')->with('message', 'No Details found. Try to search again !');
+            return redirect('/home')->with('message', 'No Details found. Try to search again !');
 
         }
     }
-    public function searchRedirect($lang)
+    public function searchRedirect()
     {
-        return redirect('/' . $lang . '/home');
+        return redirect('/home');
     }
 
 

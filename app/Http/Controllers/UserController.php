@@ -525,15 +525,7 @@ class UserController extends Controller
         $data = [
             "subjects" => Subject::all(),
         ];
-        if (App::isLocale('ar')) {
-            /*
-                ARABIC        
-             */
-            return view('ar.settings'); /* TODO */
-        } else {
-            /* FRENCH */
-            return view('fr.settings', $data);
-        }
+        return view('settings', $data);
     }
 
     public function uploadImage(Request $request)
@@ -576,7 +568,7 @@ class UserController extends Controller
     /**
      * @param $token
      */
-    public function activate($lang, $id)
+    public function activate($id)
     {
         $user = User::where('id', $id)->first();
 

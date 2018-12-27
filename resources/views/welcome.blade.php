@@ -1,4 +1,4 @@
-@extends('fr.layouts.frontend')
+@extends('layouts.frontend')
 @section('title','Archive Exam')
 @section('add2header')
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
@@ -25,8 +25,8 @@
         <div class="col-8" id="barba-wrapper">
             <div class="row">
                 <div class="col-5">
-                    <a href="/{{ locale()->current() }}/home/popular" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-fire"></i> Populaire</a>
-                    <a href="/{{ locale()->current() }}/home/recent" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-sort-amount-down"></i> Plus Recent</a>
+                    <a href="/home/popular" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-fire"></i> Populaire</a>
+                    <a href="/home/recent" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-sort-amount-down"></i> Plus Recent</a>
                 </div>
                 <div class="col-5">
                     @if($files)
@@ -34,7 +34,7 @@
                     @endif                </div>
                 <div class="col-2">
                     @if(Voyager::can('add_files'))
-                        <a href="/{{locale()->current()}}/upload" class="btn btn-outline-primary" style="border-radius:0;float:right;"><i class="fa fa-file-upload"></i> Ajouter un fichier</a>
+                        <a href="/upload" class="btn btn-outline-primary" style="border-radius:0;float:right;"><i class="fa fa-file-upload"></i> Ajouter un fichier</a>
                     @endif
                 </div>
             </div>
@@ -69,8 +69,8 @@
                                     @endif
                             </b></p>
                             <div class="pull-right">
-                                <a href="/{{ locale()->current() }}/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/view" class="btn btn-outline-primary">Aperçu</a>
-                                <a href="/{{ locale()->current() }}/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/download" class="btn btn-outline-success">Télécharger</a>
+                                <a href="/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/view" class="btn btn-outline-primary">Aperçu</a>
+                                <a href="/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/download" class="btn btn-outline-success">Télécharger</a>
                             </div>
                             <div class="pull-left">
                                 <a href="#"  onClick="submitSearch(event,'{{ addslashes($file->subject->title) }}')" class="badge @if(\App\ColorTool::isLight($file->subject->title)) badge-light @else badge-dark @endif" style="background: #{{  \App\ColorTool::stringToColorCode($file->subject->title)[1] }}">{{ $file->subject->title }}</a>
@@ -93,7 +93,7 @@
 
     <div class="col-4">
         <div class="row mx-auto">
-            <form action="/{{ locale()->current() }}/search" method="POST" role="search" class="navbar-form pt-3" role="search" style="padding-bottom:1.5rem;width:100%">
+            <form action="/search" method="POST" role="search" class="navbar-form pt-3" role="search" style="padding-bottom:1.5rem;width:100%">
                     {{ csrf_field() }}
                 <div class="input-group">
                     <input type="text" class="form-control" style="border-radius:0;" placeholder="Recherche..." name="q">
@@ -128,7 +128,7 @@
                         @endif
                     </div>
                     <div class="profile-userbuttons">
-                        <a class="btn btn-outline-primary btn-sm" href="/{{locale()->current()}}/settings">Paramètres</a>
+                        <a class="btn btn-outline-primary btn-sm" href="/settings">Paramètres</a>
                         <a class="btn btn-outline-secondary btn-sm" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Déconnexion</a>
                     </div>
                 </div>
