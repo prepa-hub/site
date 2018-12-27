@@ -150,6 +150,13 @@ class HomeController extends Controller
     {
         return redirect('/home');
     }
-
-
+    public function verified()
+    {
+        $referrer = \App\User::where('affiliate_id', '=', Auth::user()->referred_by)->first();
+        if (!is_null($referrer)) {
+            $referrer->increment('points', 90);
+            $referrer->save();
+        }
+        return redirect('/home');
+    }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b36ae6c4c496cd5d3c3b3797569e0e85",
+    "content-hash": "b442cdd9e1e9bb918333beefc15af403",
     "packages": [
         {
             "name": "arrilot/laravel-widgets",
@@ -2728,6 +2728,67 @@
                 "shell"
             ],
             "time": "2018-10-13T15:16:03+00:00"
+        },
+        {
+            "name": "questocat/laravel-referral",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Stormiix/laravel-referral.git",
+                "reference": "20a18328a7182f3189a118af6222874d716a6d08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Stormiix/laravel-referral/zipball/20a18328a7182f3189a118af6222874d716a6d08",
+                "reference": "20a18328a7182f3189a118af6222874d716a6d08",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "ramsey/uuid": "^3.8"
+            },
+            "require-dev": {
+                "laravel/laravel": "^5.5",
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0|~5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Questocat\\Referral\\ReferralServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Questocat\\Referral\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "questocat",
+                    "email": "zhengchaopu@gmail.com"
+                }
+            ],
+            "description": "A Referral System With Laravel",
+            "keywords": [
+                "affiliate-tracking",
+                "referral",
+                "referral-system"
+            ],
+            "support": {
+                "source": "https://github.com/Stormiix/laravel-referral/tree/master"
+            },
+            "time": "2018-12-27T18:38:43+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -6055,7 +6116,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "questocat/laravel-referral": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

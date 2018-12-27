@@ -126,6 +126,8 @@
                             @endif
                         </div>
                         @endif
+                        <p>Referral Link:</p>
+                        <code>{{ Auth::user()->getReferralLink() }}</code>
                     </div>
                     <div class="profile-userbuttons">
                         <a class="btn btn-outline-primary btn-sm" href="/settings">Paramètres</a>

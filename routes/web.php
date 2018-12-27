@@ -17,7 +17,8 @@ Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
-Route::get('/', 'HomeController@welcome')->name('welcome');
+Route::get('/', 'HomeController@welcome')->middleware('referral')->name('welcome');
+Route::get('/verified', 'HomeController@verified')->name('verified');
 Route::get('/home/{sort?}', 'HomeController@index')->where('sort', '[A-Za-z]+')->name('home');
 Route::get('/upload', 'FileController@addFile')->name('addFile');
 Route::post('/upload', 'FileController@handleAddFile')->name('handleAddFile');

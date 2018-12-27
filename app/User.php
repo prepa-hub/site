@@ -6,10 +6,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\UserActivate;
+use Questocat\Referral\Traits\UserReferral;
 
 class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 {
     use Notifiable;
+    use UserReferral;
+
     const ACTIVE = 1;
     const INACTIVE = 0;
     /**
@@ -18,7 +21,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'first_name', 'last_name', 'matiere_id', 'avatar', 'status'
+        'name', 'email', 'password', 'first_name', 'last_name', 'matiere_id', 'avatar', 'status', 'affiliate_id', 'referred_by'
     ];
 
     /**
