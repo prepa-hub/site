@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\UserActivate;
 
-class User extends \TCG\Voyager\Models\User
+class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 {
     use Notifiable;
     const ACTIVE = 1;
@@ -38,5 +38,9 @@ class User extends \TCG\Voyager\Models\User
     public function files()
     {
         return $this->hasMany('File', 'user_id');
+    }
+    public function verified()
+    {
+        return $this->hasVerifiedEmail();
     }
 }

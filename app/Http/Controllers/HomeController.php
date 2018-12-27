@@ -23,8 +23,19 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index']]);
+        $this->middleware(['auth', 'verified'], ['except' => ['welcome']]);
     }
+
+    public function welcome()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->verified()) {
+                return redirect('/home');
+            }
+        }
+        return view('welcome');
+    }
+
     /**
      * Gera a paginação dos itens de um array ou collection.
      *
@@ -82,7 +93,7 @@ class HomeController extends Controller
             "branches" => $branches,
             "files" => $files,
         ];
-        return view('welcome', $data);
+        return view('home', $data);
     }
     public function search(Request $request)
     {
@@ -129,7 +140,7 @@ class HomeController extends Controller
                 "files" => $files,
                 "searchTerm" => $term
             ];
-            return view('welcome', $data);
+            return view('home', $data);
         } else {
             return redirect('/home')->with('message', 'No Details found. Try to search again !');
 

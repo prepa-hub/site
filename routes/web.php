@@ -11,13 +11,13 @@
 |
  */
 
-Auth::routes();
+Auth::routes(['verify' => true]);
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
-
-Route::redirect('/', '/home', 301);
+Route::get('/', 'HomeController@welcome')->name('welcome');
 Route::get('/home/{sort?}', 'HomeController@index')->where('sort', '[A-Za-z]+')->name('home');
 Route::get('/upload', 'FileController@addFile')->name('addFile');
 Route::post('/upload', 'FileController@handleAddFile')->name('handleAddFile');

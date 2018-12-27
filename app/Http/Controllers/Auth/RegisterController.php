@@ -23,7 +23,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-    */
+     */
 
     use RegistersUsers;
 
@@ -77,20 +77,20 @@ class RegisterController extends Controller
         return $user;
     }
 
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function register(Request $request)
-    {
-        $this->validator($request->all())->validate();
+    // /**
+    //  * Handle a registration request for the application.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function register(Request $request)
+    // {
+    //     $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+    //     event(new Registered($user = $this->create($request->all())));
 
-        return redirect()->route('login')
-            ->with(['success' => 'Félicitations! votre compte a été crée, vous recevrez un email une fois que l\'administrateur aura activé votre compte.']);
-    }
+    //     return redirect()->route('login')
+    //         ->with(['success' => 'Félicitations! votre compte a été crée, vous recevrez un email une fois que l\'administrateur aura activé votre compte.']);
+    // }
 
 }
