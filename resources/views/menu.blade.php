@@ -17,6 +17,7 @@
         @else
         {{ Auth::user()->name }}
         @endif
+        (<b>{{ Auth::user()->points }}</b> Exp)
         <span class="caret"></span>
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">

@@ -31,5 +31,9 @@ Route::post('/search', 'HomeController@search');
 Route::get('/search', 'HomeController@searchRedirect');
 Route::get('/{uuid}/download', 'FileController@download')->name('files.download');
 Route::get('/{uuid}/view', 'FileController@view')->name('files.view');
-
+Route::post('/upvote', 'FileController@upvote');
+Route::post('/downvote', 'FileController@downvote');
+Route::get('/test', function () {
+    Auth::user()->rewardFor('App\File', 10);
+});
 

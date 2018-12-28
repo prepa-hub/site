@@ -29,10 +29,8 @@ class RewardUser
         $referrer = \App\User::where('affiliate_id', '=', $event->referralId)->first();
         if (!is_null($referrer)) {
             $newUser = $event->user;
-            $newUser->increment('points', 50);
-            $newUser->save();
-            $referrer->increment('points', 10);
-            $referrer->save();
+            // Reward user & file owner
+            $newUser->rewardFor('Refferal Sign Up', config('rewards.referral.register.referred'), config('rewards.referral.register.referrer'), null, null, $referrer->id);
         }
     }
 }

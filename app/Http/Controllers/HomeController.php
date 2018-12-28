@@ -9,6 +9,8 @@ use Auth;
 use App\Subject;
 use App\Branch;
 use App\File;
+use Cookie;
+use Illuminate\Support\Facades\Crypt;
 use App\Level;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -24,6 +26,12 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified'], ['except' => ['welcome']]);
+        if (Cookie::get('up_voted') === null) {
+            Cookie::queue('up_voted', Crypt::encryptString(json_encode(['files' => []])), 2628000);
+        }
+        if (Cookie::get('down_voted') === null) {
+            Cookie::queue('down_voted', Crypt::encryptString(json_encode(['files' => []])), 2628000);
+        }
     }
 
     public function welcome()
@@ -153,9 +161,9 @@ class HomeController extends Controller
     public function verified()
     {
         $referrer = \App\User::where('affiliate_id', '=', Auth::user()->referred_by)->first();
+        $referred = \App\User::find(Auth::user()->id);
         if (!is_null($referrer)) {
-            $referrer->increment('points', 90);
-            $referrer->save();
+            $referred->rewardFor('Refferal Sign Up', config('rewards.referral.verified_account.referred'), config('rewards.referral.verified_account.referrer'), null, null, $referrer->id);
         }
         return redirect('/home');
     }

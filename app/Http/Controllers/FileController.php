@@ -14,6 +14,7 @@ use App\Category;
 use App\File;
 use \Validator;
 use TCG\Voyager\Voyager;
+use Cookie;
 
 class FileController extends Controller
 {
@@ -84,7 +85,7 @@ class FileController extends Controller
             'branch' => 'required',
             'hash' => 'required',
         ];
-        $validator = Validator::make($request->all(), $rules);  
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
@@ -117,5 +118,92 @@ class FileController extends Controller
         $file->save();
         $pathToFile = public_path('/storage/files/' . $file->filename);
         return response()->file($pathToFile);
+    }
+    public function upvote(Request $request)
+    {
+        $rules = [
+            'file_id' => 'exists:files,id'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => 'Something went wrong, but we saved your vote!']);
+        }
+        $id = $request->input('file_id');
+        $file = \App\File::find($id);
+        // TODO: Log the user actions & use that to verify votes.
+        return $this->updateVote($request, true, $id);
+    }
+    public function downvote(Request $request)
+    {
+        $rules = [
+            'file_id' => 'exists:files,id'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => 'Something went wrong, but we saved your vote!']);
+        }
+        $id = $request->input('file_id'); 
+        // TODO: Log the user actions & use that to verify votes.
+        return $this->updateVote($request, false, $id);
+    }
+    /**
+     * updateVote - Manages the cookies for the voting system, 
+     *
+     * @param bool $voteType true:upVote!
+     * @param int $id
+     * @return void
+     */
+    public function updateVote($request, $voteType, $id)
+    {
+        $otherVoteType = !$voteType ? 'up_voted' : 'down_voted';
+        $voteType = $voteType ? 'up_voted' : 'down_voted';
+        $decrement = false;
+        $file = \App\File::find($id);
+        if (Auth::user()->id == $file->user_id && Auth::user()->id != 1) {
+            // Fix: Only allow the super admin to like his own shit !
+            return response()->json(['errors' => 'You can\'t rate your own file silly!']);
+        }
+        if ($request->hasCookie($voteType) && $request->hasCookie($otherVoteType)) {
+            // IF both cookie types exist !
+            $votedFiles = json_decode(Crypt::decryptString(Cookie::get($voteType)), true);
+            $otherVotedFiles = json_decode(Crypt::decryptString(Cookie::get($otherVoteType)), true);
+            if (in_array($id, $votedFiles['files'])) {
+                // If I already votedType this file return error
+                $verb = implode('', explode('_', $voteType));
+                return response()->json(['errors' => 'You have already ' . $verb . ' this file!']);
+            } else {
+                // Else, check if it's otherVotedType
+                if (in_array($id, $otherVotedFiles['files'])) {
+                    //If it is, delete it
+                    $otherVotedFiles['files'] = array_diff($otherVotedFiles['files'], [$id]);
+                    $decrement = true;
+                    // and add it to the proper votedType
+                    $votedFiles['files'][] = $id;
+                } else {
+                    // if it's not in otherVotedType, just add it to the proper one.
+                    $votedFiles['files'][] = $id;
+                }
+
+                /* Reconstruct both cookies */
+                unset($_COOKIE[$voteType]);
+                unset($_COOKIE[$otherVoteType]);
+                Cookie::queue($otherVoteType, Crypt::encryptString(json_encode($otherVotedFiles)), 2628000);
+                Cookie::queue($voteType, Crypt::encryptString(json_encode($votedFiles)), 2628000);
+                $column = $voteType == 'up_voted' ? 'upvotes' : 'downvotes';
+                $otherColumn = $column == 'upvotes' ? 'downvotes' : 'upvotes';
+                $file->increment($column);
+                if ($decrement) {
+                    $file->decrement($otherColumn);
+                }
+                $file->save();
+
+                // Reward user & file owner
+                $amount = ($voteType == 'up_voted') ? config('rewards.files.voting.upvoted') : config('rewards.files.voting.downvoted');
+                Auth::user()->rewardFor('Vote', $amount, config('rewards.files.voting.owner'), 'App\File', $file->id);
+            }
+        }
+        return response()->json(['success' => 'Vote registered !']);
     }
 }

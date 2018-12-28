@@ -15,7 +15,9 @@ class File extends Model
         'category_id',
         'branch_id',
         'filename',
-        'user_id'
+        'user_id',
+        'upvotes',
+        'downvotes'
     ];
     public function subject()
     {

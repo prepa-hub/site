@@ -902,3 +902,72 @@ body > .container {
   display: block;
 }
 
+.rating {
+  padding: 1rem;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.vote {
+  border: none;
+  background-color: transparent;
+  width: 47px;
+  height: 21.5px;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.vote:active {
+  outline: none;
+  border: none;
+}
+
+.vote:focus {
+  outline: 0;
+}
+
+#scoreCounter {
+  margin-bottom: 0rem;
+}
+
+.upArrow {
+  height: 10px;
+  x: 0px;
+  y: 0px;
+  enable-background: new 0 0 11.5 6.4;
+}
+
+.upArrow path {
+  fill: #BBBBBB;
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  margin: 0;
+}
+
+.downArrow {
+  height: 10px;
+  x: 0px;
+  y: 0px;
+  enable-background: new 0 0 11.5 6.4;
+}
+
+.downArrow path {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  fill: #BBBBBB;
+}
+
+#upButton :hover {
+  fill: #6CC576;
+  cursor: pointer;
+}
+
+#downButton :hover {
+  fill: #FF586C;
+  cursor: pointer;
+}
+
