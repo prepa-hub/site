@@ -17,7 +17,7 @@
         @else
         {{ Auth::user()->name }}
         @endif
-        (<b>{{ Auth::user()->points }}</b> Exp)
+        (<b>{{ roundExp(Auth::user()->points) }}</b> Exp)
         <span class="caret"></span>
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -54,7 +54,7 @@
 @endif
 <span style="color: #CCCECF;padding-top: .45rem;font-weight: 200;background: rgba(0,0,0,0.18);">|</span>
 <li class="nav-item">
-    <a class="nav-link" style="background: rgba(0,0,0,0.18);" href="{{ '/fr/'.\Request::route()->getName() }}">@if(App::isLocale('fr'))
+    <a class="nav-link" style="background: rgba(0,0,0,0.18);" href="{{ '/'.\Request::route()->getName() }}">@if(App::isLocale('fr'))
         <span class="badge badge-info">
             @endif Français @if(App::isLocale('fr'))</span>@endif</a>
 </li>

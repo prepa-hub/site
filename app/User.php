@@ -92,5 +92,10 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         ]);
         $this->increment('points', $exp);
         $this->save(); // TODO check if this is necessary
+        // Also reward referrer
+        if ($this->referrer()) {
+            $this->referrer()->increment('points', $exp * config('rewards.referral.profit_percentage'));
+            $this->referrer()->save();
+        }
     }
 }

@@ -2735,12 +2735,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Stormiix/laravel-referral.git",
-                "reference": "20a18328a7182f3189a118af6222874d716a6d08"
+                "reference": "7287f7bb34a07fac34f9f1641c913b20605859c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Stormiix/laravel-referral/zipball/20a18328a7182f3189a118af6222874d716a6d08",
-                "reference": "20a18328a7182f3189a118af6222874d716a6d08",
+                "url": "https://api.github.com/repos/Stormiix/laravel-referral/zipball/7287f7bb34a07fac34f9f1641c913b20605859c1",
+                "reference": "7287f7bb34a07fac34f9f1641c913b20605859c1",
                 "shasum": ""
             },
             "require": {
@@ -2788,7 +2788,7 @@
             "support": {
                 "source": "https://github.com/Stormiix/laravel-referral/tree/master"
             },
-            "time": "2018-12-27T18:38:43+00:00"
+            "time": "2018-12-28T16:20:55+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

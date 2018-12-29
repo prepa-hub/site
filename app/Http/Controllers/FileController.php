@@ -98,8 +98,8 @@ class FileController extends Controller
             'category_id' => $request->input('category') == 0 ? '' : $request->input('category'),
             'user_id' => Auth::user()->id
         ]);
-
-        return redirect(locale()->current() . '/upload')->with('success', "Fichier Ajouté !");
+        Auth::user()->rewardFor('File Upload', config('rewards.files.posted_file'));
+        return redirect('/upload')->with('success', "Fichier Ajouté !");
     }
     public function download($uuid)
     {
@@ -196,12 +196,13 @@ class FileController extends Controller
                 $file->increment($column);
                 if ($decrement) {
                     $file->decrement($otherColumn);
+                } else {
+                    // Only reward when it's first time
+                    // Reward user & file owner
+                    $amount = ($voteType == 'up_voted') ? config('rewards.files.voting.upvoted') : config('rewards.files.voting.downvoted');
+                    Auth::user()->rewardFor('Vote', $amount, config('rewards.files.voting.owner'), 'App\File', $file->id);
                 }
                 $file->save();
-
-                // Reward user & file owner
-                $amount = ($voteType == 'up_voted') ? config('rewards.files.voting.upvoted') : config('rewards.files.voting.downvoted');
-                Auth::user()->rewardFor('Vote', $amount, config('rewards.files.voting.owner'), 'App\File', $file->id);
             }
         }
         return response()->json(['success' => 'Vote registered !']);

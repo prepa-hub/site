@@ -971,3 +971,10 @@ body > .container {
   cursor: pointer;
 }
 
+.levelbar {
+  width: 80%;
+  margin: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+

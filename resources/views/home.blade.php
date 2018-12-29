@@ -23,7 +23,7 @@
     </div>
     @endif
     <div class="row">
-        <div class="col-8" id="barba-wrapper">
+        <div class="col-9" id="barba-wrapper">
             <div class="row">
                 <div class="col-5">
                     <a href="/home/popular" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-fire"></i>
@@ -31,11 +31,11 @@
                     <a href="/home/recent" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-sort-amount-down"></i>
                         Plus Recent</a>
                 </div>
-                <div class="col-5">
+                <div class="col-4">
                     @if($files)
                     {{ $files->links() }}
                     @endif </div>
-                <div class="col-2">
+                <div class="col-3">
                     @if(Voyager::can('add_files'))
                     <a href="/upload" class="btn btn-outline-primary" style="border-radius:0;float:right;"><i class="fa fa-file-upload"></i>
                         Ajouter un fichier</a>
@@ -57,22 +57,25 @@
                             <div class="col-1">
                                 <div class="rating">
                                     @php
-                                        $userVote = Auth::user()->fileVote($file->id);    
+                                    $userVote = Auth::user()->fileVote($file->id);
                                     @endphp
                                     <button id="upButton" type="button" onclick="upVote({{ $file->id }})" class="vote">
 
                                         <svg class="upArrow" viewBox="0 0 11.5 6.4" xml:space="preserve">
-                                            <path @if($userVote == 1) style="fill: #6CC576" @endif data_id="{{ $file->id }}" d="M11.4,5.4L6,0C5.9-0.1,5.8-0.1,5.8-0.1c-0.1,0-0.2,0-0.2,0.1
+                                            <path @if($userVote==1) style="fill: #6CC576" @endif data_id="{{ $file->id }}"
+                                                d="M11.4,5.4L6,0C5.9-0.1,5.8-0.1,5.8-0.1c-0.1,0-0.2,0-0.2,0.1
 	L0.1,5.4C0,5.6,0,5.7,0.1,5.9l0.4,0.4c0.1,0.1,0.3,0.1,0.4,0l4.8-4.8l4.8,4.8c0.1,0.1,0.3,0.1,0.4,0l0.4-0.4
 	C11.5,5.7,11.5,5.6,11.4,5.4z" />
                                         </svg>
                                     </button>
-                                    <h3 id="scoreCounter" data_id="{{ $file->id }}">{{ $file->upvotes-$file->downvotes }}</h3>
+                                    <h3 id="scoreCounter" data_id="{{ $file->id }}">{{ $file->upvotes-$file->downvotes
+                                        }}</h3>
                                     <button id="downButton" type="button" onclick="downVote({{ $file->id }})" class="vote">
 
                                         <svg class="downArrow" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                             viewBox="0 0 11.5 6.4" xml:space="preserve">
-                                            <path @if($userVote == -1) style="fill: #FF586C" @endif data_id="{{ $file->id }}" d="M0.1,0.9l5.4,5.4c0.1,0.1,0.1,0.1,0.2,0.1c0.1,0,0.2,0,0.2-0.1
+                                            <path @if($userVote==-1) style="fill: #FF586C" @endif data_id="{{ $file->id }}"
+                                                d="M0.1,0.9l5.4,5.4c0.1,0.1,0.1,0.1,0.2,0.1c0.1,0,0.2,0,0.2-0.1
 	l5.4-5.4c0.1-0.1,0.1-0.3,0-0.4L11,0c-0.1-0.1-0.3-0.1-0.4,0L5.8,4.8L0.9,0C0.8-0.1,0.6-0.1,0.5,0L0.1,0.4C0,0.6,0,0.7,0.1,0.9z" />
                                         </svg>
                                     </button>
@@ -92,7 +95,8 @@
                                 </div>
                                 <p class="card-text">Proposé par: <b>
                                         @if($file->user->first_name && $file->user->last_name)
-                                        {{ substr($file->user->first_name,0,1).'. '.strtoupper($file->user->last_name) }}
+                                        {{ substr($file->user->first_name,0,1).'. '.strtoupper($file->user->last_name)
+                                        }}
                                         @else
                                         {{ $file->user->name }}
                                         @endif
@@ -131,7 +135,7 @@
             @endif
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
             <div class="row mx-auto">
                 <form action="/search" method="POST" role="search" class="navbar-form pt-3" role="search" style="padding-bottom:1.5rem;width:100%">
                     {{ csrf_field() }}
@@ -160,16 +164,28 @@
                             @endif
                         </div>
                         @if(Auth::user()->subject && Voyager::can('add_files'))
-                        <div class="profile-usertitle-job">
-                            @if(Voyager::can('browse_admin'))
+                        <div class="profile-usertitle-job text-center">
+                            @if(!Voyager::can('browse_admin'))
                             Administrateur
                             @else
-                            Enseignant de {{ Auth::user()->subject->title }}
+                            @php 
+                                $level = getLevel(Auth::user()->points);
+                            @endphp
+                            <i class="fa fa-crown"></i> LEVEL {{ $level }}
                             @endif
-                        </div>
+                        </div> 
+                        @php 
+                            $nextLevelXP = (int) (($level+1) ** 1.5) * 100;
+                            $currentXP = (int) Auth::user()->points;
+                            $percentage = (int) ($currentXP*100/$nextLevelXP);
+                        @endphp
+                        <b>{{ $currentXP }}/{{ $nextLevelXP }} XP</b>
+                        <div class="progress levelbar" style="height: 20px;">
+                            <div class="progress-bar" role="progressbar" style="width: {{  $percentage }}%" aria-valuenow="{{  $percentage }}" aria-valuemin="0" aria-valuemax="100">{{  $percentage  }}%</div>
+                        </div>      
                         @endif
-                        <p>Referral Link:</p>
-                        <code>{{ Auth::user()->getReferralLink() }}</code>
+                       {{--  <p>Referral Link:
+                        <code>{{ Auth::user()->getReferralLink() }}</code></p> --}}
                     </div>
                     <div class="profile-userbuttons">
                         <a class="btn btn-outline-primary btn-sm" href="/settings">Paramètres</a>
@@ -265,7 +281,7 @@
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    }); 
+    });
     var levels = new Array(9);
     for (var i = 0; i < 9; i++) { // TODO: this should be dynamic
         levels[i] = 5 + i; //This populates the array.  +1 is necessary because arrays are 0 index based and you want to store 1-100 in it, NOT 0-99.
@@ -285,7 +301,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        }); 
+        });
         var $grid = $('.grid').isotope({
             itemSelector: '.grid-item',
             layoutMode: 'fitRows',
@@ -326,22 +342,23 @@
         });
 
     });
-    function getCurrentScore(scoreCounter){
+
+    function getCurrentScore(scoreCounter) {
         return Number(scoreCounter.html());
     }
-    
-    function toggleUp(positive,id){
-        let upArrow = $("svg[class='upArrow'] > path[data_id='"+id+"']");
-        let downArrow = $("svg[class='downArrow'] > path[data_id='"+id+"']");
-        if(positive){
+
+    function toggleUp(positive, id) {
+        let upArrow = $("svg[class='upArrow'] > path[data_id='" + id + "']");
+        let downArrow = $("svg[class='downArrow'] > path[data_id='" + id + "']");
+        if (positive) {
             upArrow.css("fill", "#6CC576");
-            downArrow.css( "fill", "#BBBBBB");
-        }else{
-            upArrow.css( "fill", "#BBBBBB");
-            downArrow.css( "fill", "#FF586C");
+            downArrow.css("fill", "#BBBBBB");
+        } else {
+            upArrow.css("fill", "#BBBBBB");
+            downArrow.css("fill", "#FF586C");
         }
     }
-   var isVoting = false;
+    var isVoting = false;
 
     function upVote(id) {
         if (isVoting) {
@@ -349,7 +366,7 @@
         }
         isVoting = true;
         $.ajax({
-           // async: false, // TODO this is bad, remove it !
+            // async: false, // TODO this is bad, remove it !
             type: 'POST',
             url: '/upvote',
             data: {
@@ -361,27 +378,27 @@
                     //check if response has errors object
                     notyf.alert(data.errors);
                 } else {
-                    let scoreCounter = $("#scoreCounter[data_id='"+id+"']");
+                    let scoreCounter = $("#scoreCounter[data_id='" + id + "']");
                     var scoreValue = getCurrentScore(scoreCounter);
                     scoreValue++;
-                    scoreCounter.html(scoreValue); 
-                    toggleUp(true,id);
+                    scoreCounter.html(scoreValue);
+                    toggleUp(true, id);
                 }
             },
         });
         // Assuming the animation duration is 2 seconds
-        setTimeout(function() {
+        setTimeout(function () {
             isVoting = false;
         }, 1000);
     }
-    
+
 
     function downVote(id) {
         if (isVoting) {
             return;
         }
         isVoting = true;
-           $.ajax({
+        $.ajax({
             type: 'POST',
             url: '/downvote',
             data: {
@@ -394,15 +411,15 @@
                     notyf.alert(data.errors);
                 } else {
                     // TODO: Something server-side & on success update HTML
-                    let scoreCounter = $("#scoreCounter[data_id='"+id+"']");
+                    let scoreCounter = $("#scoreCounter[data_id='" + id + "']");
                     var scoreValue = getCurrentScore(scoreCounter);
-                    scoreCounter.html(scoreValue-1); 
-                    toggleUp(false,id);
+                    scoreCounter.html(scoreValue - 1);
+                    toggleUp(false, id);
                 }
             },
         });
         // Assuming the animation duration is 2 seconds
-        setTimeout(function() {
+        setTimeout(function () {
             isVoting = false;
         }, 1000);
     }
