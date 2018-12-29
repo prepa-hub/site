@@ -4,6 +4,20 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
     crossorigin="anonymous">
 <link rel="stylesheet" href="/css/component-dropzone.css" />
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/pell/dist/pell.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/bootstrap-tagsinput.css"/>
+  <style>
+    .bootstrap-tagsinput {
+        border-radius: 0;
+        box-shadow: none;
+        display: block;
+
+    }
+    .bootstrap-tagsinput .tag {
+        padding: 0 .2rem .1rem .4rem;
+        background-color: #593196 !important;
+    }
+  </style>
 @endsection
 
 @section('content')
@@ -21,6 +35,15 @@
                 <div class="form-group">
                     <label for="">Titre</label>
                     <input type="text" name="title" class="form-control" placeholder="Nom du fichier" required>
+                </div>
+                <div class="form-group">
+                    <label for="">Description</label>
+                    <div id="editor" class="pell"></div>
+                    <textarea style="display:none;" name="description" id="desc"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Mots-Clés</label><br>
+                    <input type="text" name="keywords" class="" value="" data-role="tagsinput" required style="width:100%"> 
                 </div>
                 <div class="form-group">
                     <label for="matiere">Matière</label>
@@ -78,13 +101,37 @@
 @endsection
 
 @section('add2footer')
-<script>
-    // To style only selects with the selectpicker class
-    $('.selectpicker').selectpicker();
-</script>
-<script src="/js/dropzone.js"></script>
+<script src="/js/bootstrap-tagsinput.min.js"></script>    
+<script src="https://unpkg.com/pell"></script>
+    <script src="/js/dropzone.js"></script>
 
 <script>
+// Initialize pell on an HTMLElement
+pell.init({
+  // <HTMLElement>, required
+  element: document.getElementById('editor'),
+  onChange: html => $("textarea#desc").html(html),
+  // Instructs the editor which element to inject via the return key
+  defaultParagraphSeparator: 'p',
+  styleWithCSS: false,
+  actions: [
+    'bold',
+    'underline',
+    'italic',
+    'strikethrough',
+    'heading1',
+    'heading2',
+    'paragraph',
+    'quote',
+    'olist',
+    'ulist',
+    'line',
+    'link'
+  ]
+})
+
+// To style only selects with the selectpicker class
+$('.selectpicker').selectpicker();
 Dropzone.autoDiscover = false;
 var levels = new Array(9);
 for (var i = 0; i < 9; i++) {

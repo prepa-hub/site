@@ -24,36 +24,11 @@
     @endif
     <div class="row">
         <div class="col-9" id="barba-wrapper">
-            <div class="row">
-                <div class="col-5">
-                    <a href="/home/popular" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-fire"></i>
-                        Populaire</a>
-                    <a href="/home/recent" class="btn btn-outline-dark" style="border-radius:0;"><i class="fa fa-sort-amount-down"></i>
-                        Plus Recent</a>
-                </div>
-                <div class="col-4">
-                    @if($files)
-                    {{ $files->links() }}
-                    @endif </div>
-                <div class="col-3">
-                    @if(Voyager::can('add_files'))
-                    <a href="/upload" class="btn btn-outline-primary" style="border-radius:0;float:right;"><i class="fa fa-file-upload"></i>
-                        Ajouter un fichier</a>
-                    @endif
-                </div>
-            </div>
-
-            <hr>
-            @if(isset($searchTerm)) <h4>Résultats de recherche : <b>{{ $searchTerm }}</b></h4> <br>@endif
-            @if($files->count() > 0)
-            <div id="noResultsContainer" style="display:none;">
-                <h4>Pas de résultats répondant à vos critères.</h4>
-            </div>
-            <div class="row file-list hideOverflow barba-container grid">
-                @foreach($files as $file)
+            <div class="row file-list    barba-container grid">
                 <div class="col-12 grid-item {{ 'subject_'.$file->subject_id }} {{ 'level_'.$file->level_id }} {{ 'branch_'.$file->branch_id }}">
                     <div class="card">
-                        <div class="card-body row">
+                        <div class="card-body">
+                            <div class="row">
                             <div class="col-1">
                                 <div class="rating">
                                     @php
@@ -102,12 +77,14 @@
                                         {{ $file->user->name }}
                                         @endif
                                     </b></p>
-                                <div class="pull-right">
-                                    <a href="/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/view"
-                                        class="btn btn-outline-primary" target="_blank">Aperçu</a>
-                                    <a href="/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/download"
-                                        class="btn btn-outline-success">Télécharger</a>
-                                </div>
+                                <p class="card-text">Mots Clès: 
+                                        @php 
+                                            $keywords = explode(',',$file->keywords);
+                                        @endphp
+                                        @foreach($keywords as $keyword)
+                                            <a href="#"  onClick="submitSearch(event,'{{ addslashes($keyword) }}')" target="_blank"><i class="fa fa-tag"></i> {{ $keyword }}</a>
+                                        @endforeach
+                                    </p>
                                 <div class="pull-left">
                                     <a href="#" onClick="submitSearch(event,'{{ addslashes($file->subject->title) }}')"
                                         class="badge @if(\App\ColorTool::isLight($file->subject->title)) badge-light @else badge-dark @endif"
@@ -123,17 +100,28 @@
                                         $file->branch->title }}</a>
                                 </div>
                             </div>
+                            </div>
+                            <hr>
+                            <div class="row container">
+                                {!!  $file->description !!}
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-4 offset-md-8">
+                                    <a href="/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/view"
+                                        class="btn btn-outline-primary" target="_blank">Aperçu</a>
+                                    <a href="/{{ \Illuminate\Support\Facades\Crypt::encryptString($file->id) }}/download"
+                                        class="btn btn-outline-success">Télécharger</a>
+                                </div>
+                            </div>
+
+                           
                         </div>
                     </div>
                 </div>
-                @endforeach
-
-
             </div>
-            @else
-            <h4>Aucun fichier.</h4>
-
-            @endif
+            @comments(['model' => $file])
+                @endcomments
         </div>
 
         <div class="col-3">
@@ -145,69 +133,16 @@
 @endsection
 
 @section('add2footer')
-<script src="{{ asset('js/isotope.pkgd.min.js') }}" media="all"></script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-595160497e88b4fd"></script>
 <script src="https://carlosroso.com/notyf/notyf.min.js" media="all"></script>
 <script>
-    var levels = new Array(9);
-    for (var i = 0; i < 9; i++) { // TODO: this should be dynamic
-        levels[i] = 5 + i; //This populates the array.  +1 is necessary because arrays are 0 index based and you want to store 1-100 in it, NOT 0-99.
-    }
-
-    function showBranch(that) {
-        if (jQuery.inArray(parseInt(that.value), levels) == -1) {
-            $('#branch_selector').show();
-        } else {
-            $('#branch_selector').hide();
-        }
-    }
-    // To style only selects with the selectpicker class
-    $('.selectpicker').selectpicker();
     $(document).ready(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        var $grid = $('.grid').isotope({
-            itemSelector: '.grid-item',
-            layoutMode: 'fitRows',
-        })
-        // Redirect filter:
-        $("#filter").submit(function (e) {
-            var noResultsContainer = $('#noResultsContainer');
-            var isotopeContainer = $(".grid");
-            var filterValue = [];
-            e.preventDefault();
-            var subject_id = $('#subject_id').val();
-            var branch_id = $('#branch_id').val();
-            var level_id = $('#level_id').val();
-            if (subject_id > 0) {
-                filterValue.push('.subject_' + subject_id);
-            }
-            if (branch_id > 0) {
-                filterValue.push('.branch_' + branch_id);
-            }
-            if (level_id > 0) {
-                filterValue.push('.level_' + level_id);
-            }
-            console.log(filterValue);
-            // use filterFn if matches value
-            $grid.isotope({
-                filter: filterValue.join('')
-            });
-            $("#resetFilter").on("click", function () {
-                $grid.isotope({
-                    filter: '*'
-                });
-            });
-            if (!$grid.data('isotope').filteredItems.length) {
-                noResultsContainer.show();
-            } else {
-                noResultsContainer.hide();
-            }
-        });
-
-    });
+});
 
     function getCurrentScore(scoreCounter) {
         return Number(scoreCounter.html());

@@ -100,6 +100,7 @@ class HomeController extends Controller
             "levels" => $levels,
             "branches" => $branches,
             "files" => $files,
+            "showFilter" => true,
         ];
         return view('home', $data);
     }
@@ -135,6 +136,8 @@ class HomeController extends Controller
                 $query->where('first_name', 'like', '%' . $term . '%')->orWhere('last_name', 'like', '%' . $term . '%');
             })
             ->orWhere('title', 'LIKE', '%' . $term . '%')
+            ->orWhere('keywords', 'LIKE', '%' . $term . '%')
+            ->orWhere('description', 'LIKE', '%' . $term . '%')
             ->get();
         if (count($files) > 0) {
 
@@ -146,7 +149,8 @@ class HomeController extends Controller
                 "levels" => $levels,
                 "branches" => $branches,
                 "files" => $files,
-                "searchTerm" => $term
+                "searchTerm" => $term,
+                "showFilter" => true,
             ];
             return view('home', $data);
         } else {

@@ -60,3 +60,9 @@ function getLevel($xp)
     } while ($exp < $xp);
     return $i;
 }
+
+
+function isHomepage()
+{
+    return url()->current() == env('APP_URL') . "home";
+}

@@ -11,11 +11,11 @@ use App\File;
 use Illuminate\Support\Facades\Crypt;
 use Cookie;
 use App\Reward;
+use Laravelista\Comments\Commenter;
 
 class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 {
-    use Notifiable;
-    use UserReferral;
+    use Notifiable, UserReferral, Commenter;
 
     const ACTIVE = 1;
     const INACTIVE = 0;

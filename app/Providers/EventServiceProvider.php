@@ -21,6 +21,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserReferred' => [
             'App\Listeners\RewardUser',
         ],
+        'Laravelista\Comments\Events\CommentCreated' => [
+            'App\Listeners\CommentRewardUser',
+        ],
+        'Laravelista\Comments\Events\CommentDeleted' => [
+            'App\Listeners\CommentPunishUser',
+        ],
     ];
 
     /**

@@ -26,6 +26,22 @@ class FileController extends Controller
         $this->storage = public_path('/storage/files');
     }
 
+    public function showFile($id)
+    {
+
+        $file = File::find($id);
+        if (!$file) {
+            return redirect('/home');
+        }
+
+        $data = [
+            "file" => $file,
+            "showSearch" => false,
+            "showFilter" => false,
+        ];
+
+        return view('single-file', $data);
+    }
     public function addFile()
     {
         if (Auth::user()->role_id == 4) {
@@ -84,6 +100,8 @@ class FileController extends Controller
             'level' => 'required',
             'branch' => 'required',
             'hash' => 'required',
+            'description' => 'required',
+            'keywords' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -96,6 +114,8 @@ class FileController extends Controller
             'level_id' => $request->input('level') == 0 ? '' : $request->input('level'),
             'branch_id' => $request->input('branch') == 0 ? '' : $request->input('branch'),
             'category_id' => $request->input('category') == 0 ? '' : $request->input('category'),
+            'description' => $request->input('description'),
+            'keywords' => $request->input('keywords'),
             'user_id' => Auth::user()->id
         ]);
         Auth::user()->rewardFor('File Upload', config('rewards.files.posted_file'));

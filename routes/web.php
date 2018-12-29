@@ -33,7 +33,4 @@ Route::get('/{uuid}/download', 'FileController@download')->name('files.download'
 Route::get('/{uuid}/view', 'FileController@view')->name('files.view');
 Route::post('/upvote', 'FileController@upvote');
 Route::post('/downvote', 'FileController@downvote');
-Route::get('/test', function () {
-    Auth::user()->rewardFor('App\File', 10);
-});
-
+Route::get('/file/{id}', 'FileController@showFile');

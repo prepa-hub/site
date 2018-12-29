@@ -3,10 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravelista\Comments\Commentable;
 
 class File extends Model
 {
-    
+    use Commentable;
     # This property!
     protected $fillable = [
         'title',
@@ -17,7 +18,9 @@ class File extends Model
         'filename',
         'user_id',
         'upvotes',
-        'downvotes'
+        'downvotes',
+        'description',
+        'keywords'
     ];
     public function subject()
     {
