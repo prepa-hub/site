@@ -76,7 +76,7 @@
 
     <footer class="footer">
         <div class="container">
-            <span class="text-muted">© {{ date('Y') }}. Tous les droits sont réservés.</span>
+            <span class="text-muted">{!! setting('site.footer_text') !!}</span>
         </div>
     </footer>
 

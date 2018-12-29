@@ -76,7 +76,10 @@
                                         @else
                                         {{ $file->user->name }}
                                         @endif
-                                    </b></p>
+                                    </b></p> 
+                                <p class="card-text">Catégorie: 
+                                        <a href="#"  onClick="submitSearch(event,'{{ addslashes($file->category->title) }}')" target="_blank"><i class="fa fa-folder"></i> {{ $file->category->title }}</a>
+                                    </p>
                                 <p class="card-text">Mots Clès: 
                                         @php 
                                             $keywords = explode(',',$file->keywords);

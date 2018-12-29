@@ -26,16 +26,16 @@
                 {{ Auth::user()->name }}
                 @endif
             </div>
-            @if(Auth::user()->subject && Voyager::can('add_files'))
             <div class="profile-usertitle-job text-center">
-                @if(!Voyager::can('browse_admin'))
-                Administrateur
+                @if(Auth::user()->role_id == 1)
+                Administrateur - 
                 @else
+                User -
+                @endif
                 @php 
                     $level = getLevel(Auth::user()->points);
                 @endphp
                 <i class="fa fa-crown"></i> LEVEL {{ $level }}
-                @endif
             </div> 
             @php 
                 $nextLevelXP = (int) (($level+1) ** 1.5) * 100;
@@ -46,7 +46,6 @@
             <div class="progress levelbar" style="height: 20px;">
                 <div class="progress-bar" role="progressbar" style="width: {{  $percentage }}%" aria-valuenow="{{  $percentage }}" aria-valuemin="0" aria-valuemax="100">{{  $percentage  }}%</div>
             </div>      
-            @endif
             {{--  <p>Referral Link:
             <code>{{ Auth::user()->getReferralLink() }}</code></p> --}}
         </div>

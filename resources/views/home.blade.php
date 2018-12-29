@@ -134,7 +134,15 @@
             <h4>Aucun fichier.</h4>
 
             @endif
+        <div class="row">
+            
+                <div class="col-12">
+                    @if($files)
+                    {{ $files->links() }}
+                    @endif </div>
         </div>
+        </div>
+        
 
         <div class="col-3">
             @include('sidebar')
